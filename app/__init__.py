@@ -1,16 +1,40 @@
+from urllib import response
 from flask import Flask
+
 from flask_sqlalchemy import SQLAlchemy
-from config import Config
+
 from flask_migrate import Migrate
-from app.routes.routes import bp
+
+from flask_cors import CORS
+
+from config import Config
 
 db = SQLAlchemy()
+migrate = Migrate(db)
 
-app_main = Flask(__name__)
 
-migrate = Migrate()
+def create_app():
+    app = Flask(__name__)
 
-app_main.config.from_object(Config)
-db.init_app(app_main) 
-migrate.init_app(app_main, db)
-app_main.register_blueprint(bp, url_prefix="/grademate")
+    app.config.from_object(Config)
+    app_context = app.app_context()
+    app_context.push()
+
+    # Initialize DB
+    db.init_app(app)
+
+    # Initialize migrate
+    migrate.init_app(app, db, compare_type=True)
+
+
+    from app.routes.routes import bp
+    app.register_blueprint(bp, url_prefix="/grademate")
+
+    # from app.errors import blueprint as errors_bp
+    # app.register_blueprint(errors_bp)
+
+
+    db.create_all()
+    db.session.commit()
+
+    return app

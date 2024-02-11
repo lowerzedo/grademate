@@ -18,7 +18,7 @@ class Student(db.Model):
                 nullable = False
             )       
     status = db.Column(
-                db.Bool,
+                db.Boolean,
                 nullable = False
             )
     cgpa = db.Column(
