@@ -7,10 +7,8 @@ def get_admin_main(**kwargs):
 def get_students_main(**kwargs):
     return get_students(**kwargs)
 
-
 def add_admin_main(**kwargs):
     return add_admin(**kwargs)
-
 
 def update_admin_main(**kwargs):
     return update_admin(**kwargs)
