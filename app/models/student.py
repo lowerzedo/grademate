@@ -1,7 +1,6 @@
 from app import db
 
 
-
 class Student(db.Model):
     __tablename__ = "student"
 

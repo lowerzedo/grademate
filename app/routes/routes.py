@@ -6,4 +6,4 @@ from werkzeug.exceptions import HTTPException
 bp = Blueprint("views", __name__)
 
 
-print("hello")
+bp.route("/student", method=["GET"])(get_students_main)
