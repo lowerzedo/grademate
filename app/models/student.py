@@ -30,13 +30,13 @@ class Student(db.Model):
                 nullable = True
             )
     advisor_id = db.Column(
-                db.Integer,
-                db.ForeignKey("advisor.id"),
+                db.String(255),
+                db.ForeignKey("advisor.advisor_id"),
                 nullable = False
             )
     program_id = db.Column(
                 db.Integer,
-                db.ForeignKey("program.id")
+                db.ForeignKey("program.program_id")
             )
     
     advisor = db.relationship("Advisor")

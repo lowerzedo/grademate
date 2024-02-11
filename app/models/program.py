@@ -1,7 +1,7 @@
 from app import db
 
 class Program(db.Model):
-    __tablename___ = "program"
+    __tablename__ = "program"
     program_id = db.Column(
             db.Integer,
             unique = True,

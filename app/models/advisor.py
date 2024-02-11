@@ -1,8 +1,8 @@
 from app import db
 
-class Admin(db.Model):
-    __tablename__ = "admin"
-    admin_id = db.Column(
+class Advisor(db.Model):
+    __tablename__ = "advisor"
+    advisor_id = db.Column(
             db.String(32),
             unique = True,
             primary_key = True
@@ -16,7 +16,7 @@ class Admin(db.Model):
     
     def serialize(self):
         return {
-            "admin_id": self.admin_id,
+            "advisor_id": self.advisor_id,
             "full_name": self.full_name,
             "email": self.email
         }
