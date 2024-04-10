@@ -1,6 +1,6 @@
+.env
 venv
 .vscode/
 __pycache__/
 auth_data.json
 .DS_Store
-

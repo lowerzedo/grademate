@@ -1,5 +1,24 @@
 from app.services.student import *
 from app.services.admin import *
+from app.services.advisor import *
+from app.services.subject import *
+
+
+def student_class_code_main(**kwargs):
+    return student_class_code(**kwargs)
+
+def register_student_main(**kwargs):
+    return register_student(**kwargs)
+
+def login_student_main(**kwargs):
+    return login_student(**kwargs)
+
+
+def register_advisor_main(**kwargs):
+    return register_advisor(**kwargs)
+
+def login_advisor_main(**kwargs):
+    return login_advisor(**kwargs)
 
 def get_admin_main(**kwargs):
     return get_admin(**kwargs)

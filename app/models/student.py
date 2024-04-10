@@ -1,5 +1,5 @@
 from app import db
-
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class Student(db.Model):
     __tablename__ = "student"
@@ -17,6 +17,9 @@ class Student(db.Model):
                 db.String(250),
                 nullable = False
             )       
+    password = db.Column(
+                db.String(250)
+            )
     status = db.Column(
                 db.Boolean,
                 nullable = False
@@ -41,6 +44,14 @@ class Student(db.Model):
     
     advisor = db.relationship("Advisor")
     program = db.relationship("Program")
+    grades = db.relationship("Grade", back_populates="student")
+
+    
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password_hash(self,password):
+        return check_password_hash(self.password, password)
 
     def serialize(self):
         return {

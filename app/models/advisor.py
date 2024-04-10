@@ -1,4 +1,6 @@
 from app import db
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 class Advisor(db.Model):
     __tablename__ = "advisor"
@@ -13,6 +15,15 @@ class Advisor(db.Model):
     email = db.Column(
             db.String(120)
         )
+    password = db.Column(
+            db.String(250)
+        )
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password_hash(self,password):
+        return check_password_hash(self.password, password)
     
     def serialize(self):
         return {
