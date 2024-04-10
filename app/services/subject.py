@@ -21,7 +21,7 @@ def student_class_code(**kwargs):
         select(Subject)
         .join(Semester, Subject.semester_id == Semester.semester_id)
         .join(Program, Semester.program_id == Program.program_id)
-        .where(Program.program_id == 1)
+        .where(Program.program_id == student_exist.program_id)
         .distinct()
     )
 
