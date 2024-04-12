@@ -87,6 +87,33 @@ def get_student_assessment_grades(**kwargs):
     return jsonify({"grade_percentage": grade_percentage}, serialized_subject_assessments), 200
 
 
+def course_outline_manual(**kwargs):
+    subject_id = request.json.get("subject_id")
+
+    subject_exists = db.session.execute(select(Subject).where(Subject.subject_id == subject_id)).scalars().first()
+
+    if not subject_exists:
+        abort(404, "Subject doesn't exists")
+    
+    assessments = request.json.get("assessments")
+
+    for key, value in assessments[0].items():
+        new_assessment = Assessment(
+            type = key,
+            max_grade = value,
+            subject_id = subject_id
+        )
+
+        db.session.add(new_assessment)
+        db.session.commit()
+
+    new_assessments = db.session.execute(select(Assessment).where(Assessment.subject_id == subject_id)).scalars().all()
+
+    new_assessments_serialized = [new_assessment.serialize() for new_assessment in new_assessments]
+
+    return jsonify(new_assessments_serialized), 200
+
+
 def course_outline(**kwargs):
     pdf_file = request.files.get('pdf_file')
 

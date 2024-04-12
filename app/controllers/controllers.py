@@ -5,6 +5,9 @@ from app.services.subject import *
 from app.services.assessment import *
 
 
+def course_outline_manual_main(**kwargs):
+    return course_outline_manual(**kwargs)
+
 def course_outline_main(**kwargs):
     return course_outline(**kwargs)
 
