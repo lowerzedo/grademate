@@ -9,4 +9,3 @@ class Config(object):
     JWT_SECRET_KEY = os.environ.get("FLASK_JWT_SECRET_KEY")
 
 
-

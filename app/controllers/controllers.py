@@ -2,7 +2,17 @@ from app.services.student import *
 from app.services.admin import *
 from app.services.advisor import *
 from app.services.subject import *
+from app.services.assessment import *
 
+
+def course_outline_main(**kwargs):
+    return course_outline(**kwargs)
+
+def get_subject_assessments_main(**kwargs):
+    return get_subject_assessments(**kwargs)
+
+def get_student_assessment_grades_main(**kwargs):
+    return get_student_assessment_grades(**kwargs)
 
 def student_class_code_main(**kwargs):
     return student_class_code(**kwargs)
