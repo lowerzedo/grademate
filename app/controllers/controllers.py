@@ -5,6 +5,15 @@ from app.services.subject import *
 from app.services.assessment import *
 
 
+def get_advisor_student_semester_class_main(**kwargs):
+    return get_advisor_student_semester_class(**kwargs)
+
+def get_advisor_student_semester_main(**kwargs):
+    return get_advisor_student_semester(**kwargs)
+
+def get_advisor_students_main(**kwargs):
+    return get_advisor_students(**kwargs)
+
 def course_outline_manual_main(**kwargs):
     return course_outline_manual(**kwargs)
 
@@ -25,7 +34,6 @@ def register_student_main(**kwargs):
 
 def login_student_main(**kwargs):
     return login_student(**kwargs)
-
 
 def register_advisor_main(**kwargs):
     return register_advisor(**kwargs)
