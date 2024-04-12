@@ -15,6 +15,8 @@ migrate = Migrate(db)
 def create_app():
     app = Flask(__name__)
 
+    
+
     app.config.from_object(Config)
     app_context = app.app_context()
     app_context.push()
@@ -30,6 +32,13 @@ def create_app():
 
     from app.routes.routes import bp
     app.register_blueprint(bp, url_prefix="/grademate")
+
+    @app.after_request
+    def after_request(response):
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+        return response
 
     # from app.errors import blueprint as errors_bp
     # app.register_blueprint(errors_bp)

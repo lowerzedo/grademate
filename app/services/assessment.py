@@ -33,7 +33,6 @@ def get_subject_assessments(**kwargs):
 
 
 def get_student_assessment_grades(**kwargs):
-
     subject_id = request.json.get("subject_id")
     existing_subject = db.session.execute(select(Subject).where(Subject.subject_id == subject_id)).scalars().first()
     if not existing_subject:

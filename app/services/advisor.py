@@ -65,7 +65,7 @@ def login_advisor(**kwargs):
 
 
 def get_advisor_students(**kwargs):
-    advisor_id = request.json.get("advisor_id")
+    advisor_id = request.args.get("advisor_id")
 
     advisor_exist = db.session.execute(select(Advisor).where(Advisor.advisor_id == advisor_id)).scalars().first()
 
@@ -85,7 +85,7 @@ def get_advisor_students(**kwargs):
 
 
 def get_advisor_student_semester(**kwargs):
-    student_id = request.json.get("student_id")
+    student_id = request.args.get("student_id")
 
     student_exist = db.session.execute(select(Student).where(Student.student_id== student_id)).scalars().first()
 
@@ -108,7 +108,7 @@ def get_advisor_student_semester(**kwargs):
 
 
 def get_advisor_student_semester_class(**kwargs):
-    semester_id = request.json.get("semester_id")
+    semester_id = request.args.get("semester_id")
 
     semester_exist = db.session.execute(select(Semester).where(Semester.semester_id == semester_id)).scalars().first()
 
