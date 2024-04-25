@@ -51,7 +51,8 @@ def login_student(**kwargs):
         return jsonify({"message":"Student does not exist"}), 404
 
     if student_exist and student_exist.check_password_hash(password=_password):
-        access_token = create_access_token(identity=_email)
+        additional_claims = {"email": _email, "name": student_exist.full_name}  
+        access_token = create_access_token(identity=_email, additional_claims=additional_claims)
         return jsonify(
             {
                 "student": student_exist.serialize(),

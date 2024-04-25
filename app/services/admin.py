@@ -59,7 +59,8 @@ def login_admin(**kwargs):
         return jsonify({"message":"Admin doesn't exist"}), 404
 
     if admin_exist and admin_exist.check_password_hash(password=_password):
-        access_token = create_access_token(identity=_email)
+        additional_claims = {"email": _email,"name": admin_exist.full_name }
+        access_token = create_access_token(identity=_email, additional_claims=additional_claims)
         return jsonify(
             {
                 "admin": admin_exist.serialize(),

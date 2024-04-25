@@ -52,7 +52,8 @@ def login_advisor(**kwargs):
         return jsonify({"message":"Advisor doesn't exist"}), 404
 
     if advisor_exist and advisor_exist.check_password_hash(password=_password):
-        access_token = create_access_token(identity=_email)
+        additional_claims = {"email": _email, "name": advisor_exist.full_name, "advisor_id": advisor_exist.advisor_id}
+        access_token = create_access_token(identity=_email, additional_claims= additional_claims)
         return jsonify(
             {
                 "advisor": advisor_exist.serialize(),
