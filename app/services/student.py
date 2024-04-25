@@ -1,6 +1,6 @@
 from app.models.student import Student
 from sqlalchemy import select
-from flask import jsonify, request, abort
+from flask import jsonify, request
 from app import db
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 
@@ -8,7 +8,7 @@ from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 
 def register_student(**kwargs):
     if not request.json:
-        abort(400, "Request must be JSON")
+        return jsonify({"message":"Request must be JSON"}), 400
 
     _email = request.json.get("email")
     _password = request.json.get("password")
@@ -20,7 +20,7 @@ def register_student(**kwargs):
     student_exist = db.session.execute(select(Student).where(Student.email == _email)).scalars().first()
 
     if student_exist:
-        abort(400, "Student already exists")
+        return jsonify({"message":"Student already exists"}), 400
 
     new_student = Student(
         student_id = _student_id,
@@ -40,7 +40,7 @@ def register_student(**kwargs):
 
 def login_student(**kwargs):
     if not request.json:
-        abort(400, "Request must be JSON")
+        return jsonify({"message":"Request must be JSON"}), 400
 
     _email = request.json.get("email")
     _password = request.json.get("password")
@@ -48,7 +48,7 @@ def login_student(**kwargs):
     student_exist = db.session.execute(select(Student).where(Student.email == _email)).scalars().first()
 
     if not student_exist:
-        abort(404,"Student doesn't exist")
+        return jsonify({"message":"Student does not exist"}), 404
 
     if student_exist and student_exist.check_password_hash(password=_password):
         access_token = create_access_token(identity=_email)
@@ -59,7 +59,7 @@ def login_student(**kwargs):
             }
         )
     else:
-        abort(400, "Incorrect email or password")
+        return jsonify({"message":"Incorrect email or password"}), 400
 
 
 def get_students(**kwargs):

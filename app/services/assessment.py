@@ -1,5 +1,5 @@
 from app import db
-from flask import jsonify, abort, request
+from flask import jsonify
 from werkzeug.utils import secure_filename
 import os
 import openai
@@ -18,7 +18,7 @@ def get_subject_assessments(**kwargs):
     subject_id = request.json.get("subject_id")
     existing_subject = db.session.execute(select(Subject).where(Subject.subject_id == subject_id)).scalars().first()
     if not existing_subject:
-        abort(404, "Subject not found")
+        return jsonify({"message":"Subject not found"}), 404
 
     stmt = select(Assessment).where(Assessment.subject_id == subject_id)
 
@@ -36,12 +36,12 @@ def get_student_assessment_grades(**kwargs):
     subject_id = request.json.get("subject_id")
     existing_subject = db.session.execute(select(Subject).where(Subject.subject_id == subject_id)).scalars().first()
     if not existing_subject:
-        abort(404, "Subject not found")
+        return jsonify({"message":"Subject not found"}), 404
 
     student_id = request.json.get("student_id")
     student_exists = db.session.execute(select(Student).where(Student.student_id == student_id)).scalars().first()
     if not student_exists:
-        abort(404, "Student doesn't exist")
+        return jsonify({"message":"Student doesn't exist"}), 404
     
 
     stmt = (
@@ -92,7 +92,7 @@ def course_outline_manual(**kwargs):
     subject_exists = db.session.execute(select(Subject).where(Subject.subject_id == subject_id)).scalars().first()
 
     if not subject_exists:
-        abort(404, "Subject doesn't exists")
+        return jsonify({"message":"Subject doesn't exists"}), 404
     
     assessments = request.json.get("assessments")
 

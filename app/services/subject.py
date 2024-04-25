@@ -5,7 +5,7 @@ from app.models.subject import Subject
 from app.models.student import Student
 from app.models.semester import Semester
 from app.models.program import Program
-from flask import jsonify, request, abort
+from flask import jsonify, request
 from sqlalchemy import select
 
 def student_class_code(**kwargs):
@@ -15,7 +15,7 @@ def student_class_code(**kwargs):
     student_exist = db.session.execute(select(Student).where(Student.student_id == student_id)).scalars().first()
 
     if not student_exist:
-        abort(404, "Student doesn't exist")
+        return jsonify({"message":"Student doesn't exist"}), 404
 
     stmt = (
         select(Subject)

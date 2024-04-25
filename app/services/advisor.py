@@ -1,4 +1,4 @@
-from flask import jsonify, request, abort
+from flask import jsonify, request
 from app.models.advisor import Advisor
 from app.models.student import Student
 from app.models.semester import Semester
@@ -12,7 +12,7 @@ from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 
 def register_advisor(**kwargs):
     if not request.json:
-        abort(400, "Request must be JSON")
+        return jsonify(400, "Request must be JSON")
 
     _email = request.json.get("email")
     _password = request.json.get("password")
@@ -22,7 +22,7 @@ def register_advisor(**kwargs):
     advisor_exist = db.session.execute(select(Advisor).where(Advisor.email == _email)).scalars().first()
 
     if advisor_exist:
-        abort(400, "Advisor already exists")
+        return jsonify(400, "Advisor already exists")
 
     new_advisor = Advisor(
         advisor_id = _advisor_id,
@@ -41,7 +41,7 @@ def register_advisor(**kwargs):
 
 def login_advisor(**kwargs):
     if not request.json:
-        abort(400, "Request must be JSON")
+        return jsonify({"message":"Request must be JSON"}), 400
 
     _email = request.json.get("email")
     _password = request.json.get("password")
@@ -49,7 +49,7 @@ def login_advisor(**kwargs):
     advisor_exist = db.session.execute(select(Advisor).where(Advisor.email == _email)).scalars().first()
 
     if not advisor_exist:
-        abort(404,"Advisor doesn't exist")
+        return jsonify({"message":"Advisor doesn't exist"}), 404
 
     if advisor_exist and advisor_exist.check_password_hash(password=_password):
         access_token = create_access_token(identity=_email)
@@ -60,7 +60,7 @@ def login_advisor(**kwargs):
             }
         )
     else:
-        abort(400, "Incorrect email or password")
+        return jsonify({"message":"Incorrect email or password"}), 400
 
 
 
@@ -70,7 +70,7 @@ def get_advisor_students(**kwargs):
     advisor_exist = db.session.execute(select(Advisor).where(Advisor.advisor_id == advisor_id)).scalars().first()
 
     if not advisor_exist:
-        abort(404, "Advisor not found")
+        return jsonify({"message": "Advisor not found"}), 404
     
     advisor_students = db.session.execute(select(Student).where(Student.advisor_id == advisor_id)).scalars().all()
 
@@ -90,7 +90,7 @@ def get_advisor_student_semester(**kwargs):
     student_exist = db.session.execute(select(Student).where(Student.student_id== student_id)).scalars().first()
 
     if not student_exist:
-        abort(404, "Student not found")
+        return jsonify({"message":"Student not found"}), 404
 
     student_semesters = db.session.execute(
         select(Semester)
@@ -113,7 +113,7 @@ def get_advisor_student_semester_class(**kwargs):
     semester_exist = db.session.execute(select(Semester).where(Semester.semester_id == semester_id)).scalars().first()
 
     if not semester_exist:
-        abort(404, "Semester not found")
+        return jsonify({"message":"Semester not found"}), 404
     
     semester_subjects = db.session.execute(select(Subject).where(Subject.semester_id == semester_id)).scalars().all()
 

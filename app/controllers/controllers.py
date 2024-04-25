@@ -5,6 +5,13 @@ from app.services.subject import *
 from app.services.assessment import *
 
 
+def login_admin_main(**kwargs):
+    return login_admin(**kwargs)
+
+
+def register_admin_main(**kwargs):
+    return register_admin(**kwargs)
+
 def get_advisor_student_semester_class_main(**kwargs):
     return get_advisor_student_semester_class(**kwargs)
 
