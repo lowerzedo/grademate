@@ -1,5 +1,5 @@
 from app import db
-from flask import jsonify
+from flask import jsonify, request
 from werkzeug.utils import secure_filename
 import os
 import openai
@@ -15,7 +15,7 @@ from config import Config
 load_dotenv()
 
 def get_subject_assessments(**kwargs):
-    subject_id = request.json.get("subject_id")
+    subject_id = request.args.get("subject_id")
     existing_subject = db.session.execute(select(Subject).where(Subject.subject_id == subject_id)).scalars().first()
     if not existing_subject:
         return jsonify({"message":"Subject not found"}), 404
@@ -33,12 +33,12 @@ def get_subject_assessments(**kwargs):
 
 
 def get_student_assessment_grades(**kwargs):
-    subject_id = request.json.get("subject_id")
+    subject_id = request.args.get("subject_id")
     existing_subject = db.session.execute(select(Subject).where(Subject.subject_id == subject_id)).scalars().first()
     if not existing_subject:
         return jsonify({"message":"Subject not found"}), 404
 
-    student_id = request.json.get("student_id")
+    student_id = request.args.get("student_id")
     student_exists = db.session.execute(select(Student).where(Student.student_id == student_id)).scalars().first()
     if not student_exists:
         return jsonify({"message":"Student doesn't exist"}), 404
