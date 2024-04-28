@@ -27,3 +27,5 @@ bp.route("/subject/assessments", methods=["GET"])(get_subject_assessments_main)
 
 bp.route("/course_outline", methods=["POST"])(course_outline_main)
 bp.route("/course_outline/manual", methods=["POST"])(course_outline_manual_main)
+
+bp.route("/grade/save_grade", methods=["POST"])(save_grades_main)

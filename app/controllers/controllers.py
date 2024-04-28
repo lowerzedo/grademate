@@ -3,7 +3,7 @@ from app.services.admin import *
 from app.services.advisor import *
 from app.services.subject import *
 from app.services.assessment import *
-
+from app.services.grade import *
 
 def login_admin_main(**kwargs):
     return login_admin(**kwargs)
@@ -62,3 +62,6 @@ def update_admin_main(**kwargs):
 
 def delete_admin_main(**kwargs):
     return delete_admin(**kwargs)
+
+def save_grades_main(**kwargs):
+    return save_grades(**kwargs)

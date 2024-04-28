@@ -10,7 +10,7 @@ from sqlalchemy import select
 
 def student_class_code(**kwargs):
 
-    student_id = request.json.get("student_id")
+    student_id = request.args.get("student_id")
 
     student_exist = db.session.execute(select(Student).where(Student.student_id == student_id)).scalars().first()
 
