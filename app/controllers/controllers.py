@@ -65,3 +65,6 @@ def delete_admin_main(**kwargs):
 
 def save_grades_main(**kwargs):
     return save_grades(**kwargs)
+
+def add_new_assessment_main(**kwargs):
+    return add_new_assessment(**kwargs)
