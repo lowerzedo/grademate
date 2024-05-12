@@ -68,8 +68,27 @@ def get_students(**kwargs):
 
     if not students:
         return jsonify([]), 200
+
+    students_serialized = [student.serialize() for student in students]
     
-    return jsonify(students)
+    return jsonify(students_serialized), 200
     
 
+
+def drop_students(**kwargs):
+    student_ids = request.json.get("ids")
+
+    if not student_ids:
+        return jsonify({"error": "No student ids were sent"}), 401
+
+    students_to_delete = Student.query.filter(Student.student_id.in_(student_ids)).all()
+
+    if not students_to_delete:
+        return jsonify({"error": "No students found with the provided ids"}), 404
+
+    for student in students_to_delete:
+        db.session.delete(student)
     
+    db.session.commit()
+
+    return jsonify({"message": f"Successfully dropped {len(students_to_delete)} students."}), 200

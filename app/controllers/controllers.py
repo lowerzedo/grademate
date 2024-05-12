@@ -7,6 +7,13 @@ from app.services.grade import *
 from app.services.program import *
 
 
+def drop_advisors_main(**kwargs):
+    return drop_advisors(**kwargs)
+
+
+def drop_students_main(**kwargs):
+    return drop_students(**kwargs)
+
 def get_all_programs_main(**kwargs):
     return get_all_programs(**kwargs)
 
