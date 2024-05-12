@@ -18,6 +18,10 @@ class Advisor(db.Model):
     password = db.Column(
             db.String(250)
         )
+    status = db.Column(
+            db.Boolean,
+            nullable = False
+        )
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -29,6 +33,7 @@ class Advisor(db.Model):
         return {
             "advisor_id": self.advisor_id,
             "full_name": self.full_name,
-            "email": self.email
+            "email": self.email,
+            "status": self.status
         }
         

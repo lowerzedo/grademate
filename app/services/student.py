@@ -75,20 +75,27 @@ def get_students(**kwargs):
     
 
 
-def drop_students(**kwargs):
+def drop_students():
     student_ids = request.json.get("ids")
 
     if not student_ids:
         return jsonify({"error": "No student ids were sent"}), 401
 
-    students_to_delete = Student.query.filter(Student.student_id.in_(student_ids)).all()
+    try:
+        # Fetch students to be updated
+        students_to_update = Student.query.filter(Student.student_id.in_(student_ids)).all()
 
-    if not students_to_delete:
-        return jsonify({"error": "No students found with the provided ids"}), 404
+        if not students_to_update:
+            return jsonify({"error": "No students found with the provided ids"}), 404
 
-    for student in students_to_delete:
-        db.session.delete(student)
-    
-    db.session.commit()
+        # Update the status of students
+        for student in students_to_update:
+            student.status = 0 
+        
+        db.session.commit()
 
-    return jsonify({"message": f"Successfully dropped {len(students_to_delete)} students."}), 200
+        return jsonify({"message": f"Successfully updated {len(students_to_update)} students to inactive status."}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500

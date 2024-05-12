@@ -139,21 +139,27 @@ def get_all_advisors(**kwargs):
     return jsonify(advisors_serialized), 200
 
 
-def drop_advisors(**kwargs):
+def drop_advisors():
     advisor_ids = request.json.get("ids")
 
     if not advisor_ids:
         return jsonify({"error": "No advisor ids were sent"}), 401
 
+    try:
+        # Fetch advisors to be updated
+        advisors_to_update = Advisor.query.filter(Advisor.advisor_id.in_(advisor_ids)).all()
 
-    advisors_to_delete = Advisor.query.filter(Advisor.advisor_id.in_(advisor_ids)).all()
+        if not advisors_to_update:
+            return jsonify({"error": "No advisors found with the provided ids"}), 404
 
-    if not advisors_to_delete:
-        return jsonify({"error": "No advisors found with the provided ids"}), 404
+        # Update the status of advisors
+        for advisor in advisors_to_update:
+            advisor.status = 0 
+        
+        db.session.commit()
 
-    for advisor in advisors_to_delete:
-        db.session.delete(advisor)
-    
-    db.session.commit()
+        return jsonify({"message": f"Successfully updated {len(advisors_to_update)} advisors to inactive status."}), 200
 
-    return jsonify({"message": f"Successfully dropped {len(advisors_to_delete)} advisors."}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
