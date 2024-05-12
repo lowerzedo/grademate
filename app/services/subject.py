@@ -8,6 +8,18 @@ from app.models.program import Program
 from flask import jsonify, request
 from sqlalchemy import select
 
+
+def get_all_subjects(**kwargs):
+    
+    subjects = db.session.execute(select(Subject)).scalars().all()
+
+    if not subjects:
+        return jsonify([])
+
+    subjects_serialize = [subject.serialize() for subject in subjects]
+
+    return jsonify(subjects_serialize), 200
+
 def student_class_code(**kwargs):
 
     student_id = request.args.get("student_id")

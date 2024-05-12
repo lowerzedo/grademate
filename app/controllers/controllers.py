@@ -4,6 +4,20 @@ from app.services.advisor import *
 from app.services.subject import *
 from app.services.assessment import *
 from app.services.grade import *
+from app.services.program import *
+
+
+def get_all_programs_main(**kwargs):
+    return get_all_programs(**kwargs)
+
+
+def get_all_subjects_main(**kwargs):
+    return get_all_subjects(**kwargs)
+
+
+def get_all_advisors_main(**kwargs):
+    return get_all_advisors(**kwargs)
+
 
 def login_admin_main(**kwargs):
     return login_admin(**kwargs)

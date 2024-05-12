@@ -124,3 +124,16 @@ def get_advisor_student_semester_class(**kwargs):
     semester_subjects_serialized = [semester_subject.serialize() for semester_subject in semester_subjects]
 
     return jsonify(semester_subjects_serialized), 200
+
+
+
+def get_all_advisors(**kwargs):
+
+    advisors = db.session.execute(select(Advisor)).scalars().all()
+
+    if not advisors:
+        return jsonify([]), 200
+    
+    advisors_serialized = [advisor.serialize() for advisor in advisors]
+
+    return jsonify(advisors_serialized), 200
