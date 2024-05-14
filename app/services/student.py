@@ -66,7 +66,7 @@ def register_student_in_bulk():
                     full_name=student_data['full_name'],
                     advisor_id=student_data['advisor_id'],
                     program_id=student_data['program_id'],
-                    status=1  # Assuming 'status' is a required field like in your single registration function
+                    status=1 
                 )
                 new_student.set_password(student_data['password'])  # Encrypt the password
                 not_existing_students.append(new_student)
@@ -79,7 +79,7 @@ def register_student_in_bulk():
             return jsonify({"message": f"Added {len(not_existing_students)} students"}), 201
         else:
             return jsonify({"message": "All students already exist"}), 200
-            
+
 
 
 def login_student(**kwargs):
