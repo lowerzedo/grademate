@@ -7,6 +7,13 @@ from app.services.grade import *
 from app.services.program import *
 
 
+def register_advisor_in_bulk_main(**kwargs):
+    return register_advisor_in_bulk(**kwargs)
+
+
+def register_student_in_bulk_main(**kwargs):
+    return register_student_in_bulk(**kwargs)
+
 def drop_advisors_main(**kwargs):
     return drop_advisors(**kwargs)
 

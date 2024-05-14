@@ -6,7 +6,47 @@ from app.models.program import Program
 from app.models.subject import Subject
 from app import db
 from sqlalchemy import select
+from sqlalchemy.orm import Session
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token
+
+
+def register_advisor_in_bulk():
+    # Retrieve advisor data from the request
+    advisors = request.json.get("advisors")
+
+    # Check if any advisor data is provided
+    if not advisors:
+        return jsonify({"message": "No advisor details were passed"}), 400
+
+    not_existing_advisors = []
+
+    # Create a new database session
+    with Session(db.engine) as session:
+        for advisor_data in advisors:
+            # Check if the advisor already exists in the database
+            advisor_exists = session.execute(
+                select(Advisor).where(Advisor.email == advisor_data['email'])
+            ).scalars().first()
+
+            if not advisor_exists:
+                # If the advisor does not exist, prepare to add them
+                new_advisor = Advisor(
+                    advisor_id=advisor_data['advisor_id'],
+                    email=advisor_data['email'],
+                    full_name=advisor_data['full_name'],
+                    status=1 
+                )
+                new_advisor.set_password(advisor_data['password'])  # Encrypt the password
+                not_existing_advisors.append(new_advisor)
+
+        # Bulk insert new advisors
+        if not_existing_advisors:
+            session.add_all(not_existing_advisors)
+            session.commit()  # Commit the session to insert new records
+
+            return jsonify({"message": f"Added {len(not_existing_advisors)} advisors"}), 201
+        else:
+            return jsonify({"message": "All advisors already exist"}), 200
 
 
 

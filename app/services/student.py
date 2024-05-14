@@ -1,5 +1,6 @@
 from app.models.student import Student
 from sqlalchemy import select
+from sqlalchemy.orm import Session
 from flask import jsonify, request
 from app import db
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token
@@ -37,6 +38,49 @@ def register_student(**kwargs):
     db.session.commit()
 
     return jsonify(new_student.serialize())    
+
+
+def register_student_in_bulk():
+    # Retrieve student data from the request
+    students = request.json.get("students")
+
+    # Check if any student data is provided
+    if not students:
+        return jsonify({"message": "No student details were passed"}), 400
+
+    not_existing_students = []
+
+    # Create a new database session
+    with Session(db.engine) as session:
+        for student_data in students:
+            # Check if the student already exists in the database
+            student_exists = session.execute(
+                select(Student).where(Student.email == student_data['email'])
+            ).scalars().first()
+
+            if not student_exists:
+                # If the student does not exist, prepare to add them
+                new_student = Student(
+                    student_id=student_data['student_id'],
+                    email=student_data['email'],
+                    full_name=student_data['full_name'],
+                    advisor_id=student_data['advisor_id'],
+                    program_id=student_data['program_id'],
+                    status=1  # Assuming 'status' is a required field like in your single registration function
+                )
+                new_student.set_password(student_data['password'])  # Encrypt the password
+                not_existing_students.append(new_student)
+
+        # Bulk insert new students
+        if not_existing_students:
+            session.add_all(not_existing_students)
+            session.commit()  # Commit the session to insert new records
+
+            return jsonify({"message": f"Added {len(not_existing_students)} students"}), 201
+        else:
+            return jsonify({"message": "All students already exist"}), 200
+            
+
 
 def login_student(**kwargs):
     if not request.json:
