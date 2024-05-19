@@ -18,7 +18,7 @@ def evaluate_student(**kwargs):
 
     student_id = request.json.get("student_id")
     if not student_id:
-        return jsonify({"message": "Missing student_id in request"}), 400
+        student_id = "A121031"
 
     # Fetching subject grades for the student
     subject_grades_query = (
