@@ -29,6 +29,7 @@ subjects = {
         "description": "This course covers the theory and practice of database management systems. Students will learn about relational databases, SQL, normalization, indexing, and transaction management. The course also explores NoSQL databases and the differences between various database models.",
         "topics": ["SQL", "Normalization", "Indexing", "Transactions"]
     },
+    
     "Computer Networks": {
         "code": "CS303",
         "description": "This course examines the principles of computer networking. Topics include the OSI model, TCP/IP protocol suite, network protocols, and network security. Students will learn about the design, implementation, and management of computer networks.",
@@ -38,7 +39,10 @@ subjects = {
         "code": "CS401",
         "description": "This course provides an introduction to the concepts and techniques of artificial intelligence (AI). Topics include machine learning algorithms, search algorithms, neural networks, and natural language processing. Students will explore the applications and ethical considerations of AI.",
         "topics": ["Machine Learning", "Search Algorithms", "Neural Networks", "Natural Language Processing"]
-    },
+    }
+}
+
+grades = {
     "Discrete Mathematics": {
         "code": "MATH101",
         "grade": "A"

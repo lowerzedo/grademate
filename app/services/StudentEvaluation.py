@@ -1,4 +1,4 @@
-from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from langchain.prompts import (
     ChatPromptTemplate,
     MessagesPlaceholder
@@ -14,12 +14,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-api_key= os.environ.get('OPENAI_KEY_NEW')
+api_key = os.environ.get('OPENAI_KEY_NEW')
 
 class StudentEvaluator:
-    def init(self):
+    def __init__(self):
         self.store = {}
-        self.model = ChatOpenAI(api_key, max_tokens=4000)
+        self.model = ChatOpenAI(api_key=api_key, max_tokens=4000)
         self.searchParser = JsonOutputParser(pydantic_object=self.SearchOutput)
 
         # Prompt Setup
@@ -27,13 +27,13 @@ class StudentEvaluator:
             [
                 (
                     "system",
-                    """You're an assistant who's good at {ability}. follow the format instructions {instructions}, 
+                    """You're an assistant who's good at {ability}. Follow the format instructions {instructions}, 
                     
-                    This is the subjects that the student is taking {subjects}, 
+                    These are the subjects that the student is taking {subjects}, 
                     
-                    and this is the students grades so far {grades}
+                    and these are the student's grades so far {grades}
                     
-                    be as comprehensive as you can
+                    Be as comprehensive as you can.
                     
                     """,
                 ),
@@ -54,7 +54,7 @@ class StudentEvaluator:
     class SearchOutput(BaseModel):
         strengths: str = Field(description="Tell students what subject they're good at and why exactly it is that they're good at it.")
         weaknesses: str = Field(description="Tell students what subject they're weak at and why exactly it is that they're weak at it.")
-        recommendation: str = Field(description="Recommendation on what should the student focus on, as well as recommend resources (urls) for them to refer to and improve what they're lacking at.")
+        recommendation: str = Field(description="Recommendation on what the student should focus on, as well as recommend resources (urls) for them to refer to and improve what they're lacking at.")
         
     def get_session_history(self, session_id: str) -> BaseChatMessageHistory:
         if session_id not in self.store:

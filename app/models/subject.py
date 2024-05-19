@@ -13,6 +13,12 @@ class Subject(db.Model):
     code = db.Column(
             db.String(200)
         )
+    description = db.Column(
+            db.String(2000)
+        )
+    topics = db.Column(
+            db.String(2000)
+    )
     semester_id = db.Column(
             db.Integer,
             db.ForeignKey("semester.semester_id")
@@ -26,6 +32,8 @@ class Subject(db.Model):
             "subject_id": self.subject_id,
             "name": self.name,
             "code": self.code,
+            "description": self.description,
+            "topics": self.topics,
             "semester_id": self.semester_id
         }
         

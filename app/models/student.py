@@ -41,9 +41,14 @@ class Student(db.Model):
                 db.Integer,
                 db.ForeignKey("program.program_id")
             )
+    current_semester = db.Column(
+                db.Integer,
+                db.ForeignKey("semester.semester_id")
+            )
     
     advisor = db.relationship("Advisor")
     program = db.relationship("Program")
+    semester = db.relationship("Semester")
     grades = db.relationship("Grade", back_populates="student")
 
     
@@ -62,6 +67,7 @@ class Student(db.Model):
             "cgpa": self.cgpa,
             "gpa": self.gpa,
             "advisor_id": self.advisor_id,
-            "program_id": self.program_id
+            "program_id": self.program_id,
+            "current_semester": self.current_semester
         }
 

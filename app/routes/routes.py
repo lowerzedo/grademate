@@ -3,6 +3,7 @@ from app.controllers.controllers import *
 from flask import Blueprint, jsonify
 from werkzeug.exceptions import HTTPException
 
+name = 'default'
 bp = Blueprint("views", name)
 
 bp.route("/admin", methods=["GET"])(get_admin_main)
