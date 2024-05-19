@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-api_key=openai.api_key = os.environ.get('OPENAI_KEY_NEW')
+api_key= os.environ.get('OPENAI_KEY_NEW')
 
 class StudentEvaluator:
     def init(self):
