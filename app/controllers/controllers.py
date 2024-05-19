@@ -5,6 +5,7 @@ from app.services.subject import *
 from app.services.assessment import *
 from app.services.grade import *
 from app.services.program import *
+from app.services.evaluation import *
 
 
 def register_advisor_in_bulk_main(**kwargs):
@@ -96,3 +97,7 @@ def save_grades_main(**kwargs):
 
 def add_new_assessment_main(**kwargs):
     return add_new_assessment(**kwargs)
+
+
+def get_student_evaluation(**kwargs):
+    return evaluate_student(**kwargs)

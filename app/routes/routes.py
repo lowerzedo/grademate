@@ -3,7 +3,7 @@ from app.controllers.controllers import *
 from flask import Blueprint, jsonify
 from werkzeug.exceptions import HTTPException
 
-bp = Blueprint("views", __name__)
+bp = Blueprint("views", name)
 
 bp.route("/admin", methods=["GET"])(get_admin_main)
 bp.route("/admin/register", methods=["POST"])(register_admin_main)
@@ -38,3 +38,5 @@ bp.route("/course_outline/manual", methods=["POST"])(course_outline_manual_main)
 bp.route("/grade/save_grade", methods=["POST"])(save_grades_main)
 
 bp.route("/programs", methods=["GET"])(get_all_programs_main)
+
+bp.route("/evaluate", methods=["POST"])(get_student_evaluation)
