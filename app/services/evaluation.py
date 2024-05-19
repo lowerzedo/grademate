@@ -1,5 +1,3 @@
-
-
 from app.models.student import Student
 from flask import jsonify, request
 from app.services.StudentEvaluation import StudentEvaluator
@@ -14,4 +12,5 @@ def evaluate_student(**kwargs):
         return jsonify({"message":"Request must be JSON"}), 400
     output = studentEvaluate.evaluate_student(grades=grades, subjects=subjects)
 
-    return jsonify(output)
+    return jsonify(output)    
+
