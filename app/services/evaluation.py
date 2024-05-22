@@ -1,8 +1,6 @@
 from app.models.student import Student
 from flask import jsonify, request
 from app.services.StudentEvaluation import StudentEvaluator
-
-from app.services.delete_this_later import grades, subjects
 from app.models.subject_grade import SubjectGrade
 from app.models.subject import Subject
 from app.models.student import Student

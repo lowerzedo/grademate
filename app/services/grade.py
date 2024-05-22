@@ -18,25 +18,22 @@ def save_grades(**kwargs):
 
     if not assessment_exists:
         return jsonify({"error": "Assessment not found"}), 404
+    
 
     assessment_grade = db.session.execute(select(Grade).where(Grade.student_id == _student_id, Grade.assessment_id == _assessment_id)).scalars().first()
 
     if assessment_grade:
-        update_grade = assessment_grade(
+        assessment_grade.achieved_grade = _achieved_grade
+        db.session.commit()
+        return jsonify(assessment_grade.serialize()), 200
+    else:
+        new_grade = Grade(
+            assessment_id = _assessment_id,
+            student_id = _student_id,
             achieved_grade = _achieved_grade
         )
-
+        db.session.add(new_grade)
         db.session.commit()
-
-    new_grade = Grade(
-        assessment_id = _assessment_id,
-        student_id = _student_id,
-        achieved_grade = _achieved_grade
-    )
-
-    db.session.add(new_grade)
-    db.session.commit()
-
-    return jsonify(new_grade.serialize()), 200
+        return jsonify(new_grade.serialize()), 200
 
 
