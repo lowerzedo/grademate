@@ -8,6 +8,12 @@ from app.services.program import *
 from app.services.evaluation import *
 
 
+def add_advisee_bulk_main(**kwargs):
+    return add_advisee_bulk(**kwargs)
+
+def add_advisee_main(**kwargs):
+    return add_advisee(**kwargs)
+
 def register_advisor_in_bulk_main(**kwargs):
     return register_advisor_in_bulk(**kwargs)
 

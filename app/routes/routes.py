@@ -20,6 +20,8 @@ bp.route("/advisor/student/semesters", methods=['GET'])(get_advisor_student_seme
 bp.route("/advisor/student/semester/classes", methods=['GET'])(get_advisor_student_semester_class_main)
 bp.route("/advisors", methods=['GET'])(get_all_advisors_main)
 bp.route("/advisor/drop", methods=['PUT'])(drop_advisors_main)
+bp.route("/advisor/add_advisee", methods=['POST'])(add_advisee_main)
+bp.route("/advisor/add_advisee/bulk", methods=['POST'])(add_advisee_bulk_main)
 
 bp.route("/student", methods=["GET"])(get_students_main)
 bp.route("/student/register", methods=["POST"])(register_student_main)

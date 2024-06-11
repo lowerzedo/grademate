@@ -8,7 +8,91 @@ from app import db
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token
+import pandas as pd
+from werkzeug.utils import secure_filename
+import os
 
+UPLOAD_FOLDER = './uploads'
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+def add_advisee():
+    student_id = request.json.get("student_id")
+    advisor_id = request.json.get("advisor_id")
+
+    student_exist = db.session.execute(select(Student).where(Student.student_id == student_id)).scalars().first()
+
+    if not student_exist:
+        return jsonify({"message":"Student not found"}), 404
+
+    advisor_exist = db.session.execute(select(Advisor).where(Advisor.advisor_id == advisor_id)).scalars().first()
+
+    if not advisor_exist:
+        return jsonify({"message":"Advisor not found"}), 404
+
+    student_exist.advisor_id = advisor_id
+    db.session.commit()
+
+    return jsonify(student_exist.serialize()), 200
+
+def add_advisee_bulk():
+    if 'file' not in request.files or 'advisor_id' not in request.form:
+        return jsonify({"message": "Invalid request data"}), 400
+
+    file = request.files['file']
+    advisor_id = request.form['advisor_id']
+
+    if file.filename == '':
+        return jsonify({"message": "No file selected"}), 400
+
+    filename = secure_filename(file.filename)
+    file_path = os.path.join(UPLOAD_FOLDER, filename)
+    file.save(file_path)
+
+    # Assuming the CSV has a 'Student ID' column
+    try:
+        df = pd.read_csv(file_path)
+        student_ids = df['Student ID'].tolist()
+
+        # Implement the logic to update advisees in the database
+        return process_advisees(advisor_id, student_ids)
+    except Exception as e:
+        return jsonify({"message": "Error processing file", "error": str(e)}), 500
+
+def process_advisees(advisor_id, student_ids):
+    not_existing_students = []
+    not_existing_advisors = []
+
+    with Session(db.engine) as session:
+        for student_id in student_ids:
+            student_exist = session.execute(
+                select(Student).where(Student.student_id == student_id)
+            ).scalars().first()
+
+            advisor_exist = session.execute(
+                select(Advisor).where(Advisor.advisor_id == advisor_id)
+            ).scalars().first()
+
+            if not student_exist:
+                not_existing_students.append(student_id)
+            if not advisor_exist:
+                not_existing_advisors.append(advisor_id)
+
+            if student_exist and advisor_exist:
+                student_exist.advisor_id = advisor_id
+
+        if not_existing_students or not_existing_advisors:
+            return jsonify(
+                {
+                    "message": "Some students or advisors do not exist",
+                    "students": not_existing_students,
+                    "advisors": not_existing_advisors
+                }
+            ), 404
+
+        session.commit()
+
+        return jsonify({"message": "Successfully updated students' advisor"}), 200
 
 def register_advisor_in_bulk():
     # Retrieve advisor data from the request
