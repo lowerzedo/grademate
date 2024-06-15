@@ -16,6 +16,18 @@ UPLOAD_FOLDER = './uploads'
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
+def fetch_students():
+    # Fetch and return all students that doesn't have advisor_id from the database
+    students_without_advisor = db.session.execute(select(Student).where(Student.advisor_id == None)).scalars().all()
+    if not students_without_advisor:
+        return jsonify([]), 200
+    students_serialized = [student.serialize() for student in students_without_advisor]
+    return jsonify(students_serialized), 200
+
+
+
+
+
 def add_advisee():
     student_id = request.json.get("student_id")
     advisor_id = request.json.get("advisor_id")
@@ -176,7 +188,7 @@ def login_advisor(**kwargs):
         return jsonify({"message":"Advisor doesn't exist"}), 404
 
     if advisor_exist and advisor_exist.check_password_hash(password=_password):
-        additional_claims = {"email": _email, "name": advisor_exist.full_name, "advisor_id": advisor_exist.advisor_id}
+        additional_claims = {"email": _email, "name": advisor_exist.full_name, "advisor_id": advisor_exist.advisor_id, "role": "advisor"}
         access_token = create_access_token(identity=_email, additional_claims= additional_claims)
         return jsonify(
             {

@@ -95,7 +95,7 @@ def login_student(**kwargs):
         return jsonify({"message":"Student does not exist"}), 404
 
     if student_exist and student_exist.check_password_hash(password=_password):
-        additional_claims = {"email": _email, "name": student_exist.full_name, "student_id": student_exist.student_id}  
+        additional_claims = {"email": _email, "name": student_exist.full_name, "student_id": student_exist.student_id, "role": "student"}  
         access_token = create_access_token(identity=_email, additional_claims=additional_claims)
         return jsonify(
             {
@@ -106,6 +106,22 @@ def login_student(**kwargs):
     else:
         return jsonify({"message":"Incorrect email or password"}), 400
 
+
+def get_student(**kwargs):
+    student_id = kwargs.get("student_id")
+
+    student = db.session.execute(select(Student).where(Student.student_id == student_id)).scalars().first()
+
+    if not student:
+        return jsonify({"message":"Student not found"}), 404
+
+    program_name = student.program.program_name 
+
+    return jsonify({
+        "student": student.serialize(),
+        "program_name": program_name,
+        "semester": student.semester.name
+    }), 200
 
 def get_students(**kwargs):
     students = db.session.execute(select(Student)).scalars().all()

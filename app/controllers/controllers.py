@@ -8,6 +8,9 @@ from app.services.program import *
 from app.services.evaluation import *
 
 
+def fetch_students_main(**kwargs):
+    return fetch_students(**kwargs)
+
 def add_advisee_bulk_main(**kwargs):
     return add_advisee_bulk(**kwargs)
 
@@ -88,6 +91,9 @@ def get_admin_main(**kwargs):
 
 def get_students_main(**kwargs):
     return get_students(**kwargs)
+
+def get_student_main(**kwargs):
+    return get_student(**kwargs)
 
 def add_admin_main(**kwargs):
     return add_admin(**kwargs)
