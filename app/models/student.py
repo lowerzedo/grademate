@@ -35,7 +35,7 @@ class Student(db.Model):
     advisor_id = db.Column(
                 db.String(255),
                 db.ForeignKey("advisor.advisor_id"),
-                nullable = False
+                nullable = True
             )
     program_id = db.Column(
                 db.Integer,
