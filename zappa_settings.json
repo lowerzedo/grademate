@@ -1,0 +1,17 @@
+{
+    "production": {
+        "app_function": "main.app",
+        "aws_region": "ap-southeast-1",
+        "exclude": [
+            "boto3",
+            "dateutil",
+            "botocore",
+            "s3transfer",
+            "concurrent"
+        ],
+        "profile_name": "default",
+        "project_name": "grademate",
+        "runtime": "python3.11",
+        "s3_bucket": "zappa-grademate"
+    }
+}
