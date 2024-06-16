@@ -33,12 +33,7 @@ def create_app():
     from app.routes.routes import bp
     app.register_blueprint(bp, url_prefix="/grademate")
 
-    @app.after_request
-    def after_request(response):
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-        return response
+    CORS(app, resources={r"/grademate/*": {"origins": "*"}})
 
     # from app.errors import blueprint as errors_bp
     # app.register_blueprint(errors_bp)
