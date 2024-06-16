@@ -11,7 +11,8 @@
         ],
         "project_name": "grademate",
         "runtime": "python3.11",
-        "s3_bucket": "zappa-grademate"
+        "s3_bucket": "zappa-grademate",
+        "slim_handler": true
     },
         "dev": {
             "app_function": "main.app",
@@ -25,7 +26,8 @@
             ],
             "project_name": "grademate-dev",
             "runtime": "python3.11",
-            "s3_bucket": "zappa-grademate-dev"
+            "s3_bucket": "zappa-grademate-dev",
+            "slim_handler": true
         }
     
 }
