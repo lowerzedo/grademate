@@ -12,31 +12,28 @@ migrate = Migrate(db)
 
 
 
+
 def create_app():
     app = Flask(__name__)
-
-    
-
     app.config.from_object(Config)
-    app_context = app.app_context()
-    app_context.push()
+    
+    # Context pushing
+    with app.app_context():
+        # Initialize extensions
+        db.init_app(app)
+        jwt.init_app(app)
+        migrate.init_app(app, db, compare_type=True)
+        
+        # Register routes
+        from app.routes.routes import bp
+        app.register_blueprint(bp, url_prefix="/grademate")
+        
+        # Setup CORS
+        CORS(app, resources={r"/grademate/*": {"origins": "*"}})
+        
 
-    # Initialize DB
-    db.init_app(app)
-
-    jwt.init_app(app)
-
-    # Initialize migrate
-    migrate.init_app(app, db, compare_type=True)
-
-
-    from app.routes.routes import bp
-    app.register_blueprint(bp, url_prefix="/grademate")
-
-    CORS(app, resources={r"/grademate/*": {"origins": "*"}})
-
-    # from app.errors import blueprint as errors_bp
-    # app.register_blueprint(errors_bp)
+    from app.errors import blueprint as errors_bp
+    app.register_blueprint(errors_bp)
 
 
     db.create_all()
