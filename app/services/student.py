@@ -35,9 +35,12 @@ def register_student(**kwargs):
     new_student.set_password(password=_password)
 
     db.session.add(new_student)
-    db.session.commit()
-
-    return jsonify(new_student.serialize())    
+    try:
+        db.session.commit()
+        return jsonify(new_student.serialize()), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 400 
 
 
 def register_student_in_bulk():
