@@ -36,7 +36,7 @@ def create_app():
     app.register_blueprint(errors_bp)
 
 
-    db.create_all()
-    db.session.commit()
+    # db.create_all()
+    # db.session.commit()
 
     return app
