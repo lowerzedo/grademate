@@ -32,6 +32,7 @@ def student_class_code(**kwargs):
     stmt = (
         select(Subject)
         .join(Semester, Subject.semester_id == Semester.semester_id)
+        .join(Student, Semester.semester_id == Student.current_semester)
         .join(Program, Semester.program_id == Program.program_id)
         .where(Program.program_id == student_exist.program_id)
         .distinct()
