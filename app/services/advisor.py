@@ -163,7 +163,8 @@ def register_advisor(**kwargs):
     new_advisor = Advisor(
         advisor_id = _advisor_id,
         email = _email,
-        full_name = _full_name
+        full_name = _full_name,
+        status = 1
     )
 
     new_advisor.set_password(password=_password)
