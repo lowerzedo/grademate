@@ -69,6 +69,7 @@ def get_student_assessment_grades(**kwargs):
         'achieved_grade': assessment.achieved_grade or 0  # Ensure None is replaced with 0
     } for assessment in subject_assessments]
 
+    # Calculate the total grade achieved by the student
     total_grade = sum(
         ((assessment['achieved_grade'] / 100) * assessment['max_grade']) 
         for assessment in serialized_subject_assessments
@@ -76,7 +77,7 @@ def get_student_assessment_grades(**kwargs):
 
     # Calculate the percentage of the total possible score (which should sum to 100)
     total_max_grade = sum(assessment['max_grade'] for assessment in serialized_subject_assessments)
-    # Calculate the percentage of the total possible score
+    # Calculate the percentage of the grade percentage
     if total_max_grade > 0:
         grade_percentage = (total_grade / total_max_grade) * 100
         grade_percentage = round(grade_percentage, 1)  # Round to one decimal place

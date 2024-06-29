@@ -57,6 +57,7 @@ def add_advisee_bulk():
     if file.filename == '':
         return jsonify({"message": "No file selected"}), 400
 
+    # we use secure_filename to avoid any malicious file uploads. It works by replacing unsafe characters with an underscore
     filename = secure_filename(file.filename)
     file_path = os.path.join(UPLOAD_FOLDER, filename)
     file.save(file_path)

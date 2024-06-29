@@ -18,30 +18,37 @@ def get_admin(**kwargs):
     
 
 def register_admin(**kwargs):
+    # checks if the json body is sent from frontend
     if not request.json:
         return jsonify(400, "Request must be JSON")
 
+    # assign internal variables to values sent from frontend in json
     _email = request.json.get("email")
     _password = request.json.get("password")
     _admin_id = request.json.get("admin_id")
     _full_name = request.json.get("full_name")
 
+    # check if the admin is already created || you do it by fetching admin where email is equal to one frontend sent
     admin_exist = db.session.execute(select(Admin).where(Admin.email == _email)).scalars().first()
 
     if admin_exist:
         return jsonify(400, "Admin already exists")
 
+    # if admin details do not exist in db add details to Admin object (model)
     new_admin = Admin(
         admin_id = _admin_id,
         email = _email,
         full_name = _full_name
     )
 
+    # Save that object in to the table
     new_admin.set_password(password=_password)
 
+    # Save the object in the table
     db.session.add(new_admin)
     db.session.commit()
 
+    # return the new admin object to frontend
     return jsonify(new_admin.serialize())
 
 
@@ -58,7 +65,9 @@ def login_admin(**kwargs):
     if not admin_exist:
         return jsonify({"message":"Admin doesn't exist"}), 404
 
+    # check if the password is correct
     if admin_exist and admin_exist.check_password_hash(password=_password):
+        # create a token for the admin and send it back to frontend with the admin details
         additional_claims = {"email": _email,"name": admin_exist.full_name, "role": "admin"}
         access_token = create_access_token(identity=_email, additional_claims=additional_claims)
         return jsonify(

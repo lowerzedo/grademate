@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify
 from werkzeug.exceptions import HTTPException
 
 name = 'default'
+# we need blueprint to define the routes
 bp = Blueprint("views", name)
 
 bp.route("/admin", methods=["GET"])(get_admin_main)
@@ -22,6 +23,7 @@ bp.route("/advisors", methods=['GET'])(get_all_advisors_main)
 bp.route("/advisor/drop", methods=['PUT'])(drop_advisors_main)
 bp.route("/advisor/fetch_students", methods=['GET'])(fetch_students_main)
 bp.route("/advisor/add_advisee", methods=['POST'])(add_advisee_main)
+# CSV file upload
 bp.route("/advisor/add_advisee/bulk", methods=['POST'])(add_advisee_bulk_main)
 
 bp.route("/student", methods=["GET"])(get_students_main)

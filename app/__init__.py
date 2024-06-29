@@ -17,11 +17,12 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     
-    # Context pushing
+    # Context pushing. we need context to access the database and other extensions
     with app.app_context():
         # Initialize extensions
         db.init_app(app)
         jwt.init_app(app)
+        # we need migrate to run the migrations
         migrate.init_app(app, db, compare_type=True)
         
         # Register routes

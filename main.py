@@ -3,6 +3,7 @@ from app import create_app
 
 app = create_app()
 
+# we need CORS to allow requests from the frontend
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 
