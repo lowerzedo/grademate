@@ -1,6 +1,4 @@
 from app import db
-from app.models.assessment import Assessment
-from app.models.grade import Grade
 from app.models.subject import Subject
 from app.models.student import Student
 from app.models.semester import Semester

@@ -36,13 +36,12 @@ def get_student_assessment_grades(**kwargs):
     subject_id = request.args.get("subject_id")
     existing_subject = db.session.execute(select(Subject).where(Subject.subject_id == subject_id)).scalars().first()
     if not existing_subject:
-        return jsonify({"message":"Subject not found"}), 404
+        return jsonify({"message": "Subject not found"}), 404
 
     student_id = request.args.get("student_id")
     student_exists = db.session.execute(select(Student).where(Student.student_id == student_id)).scalars().first()
     if not student_exists:
-        return jsonify({"message":"Student doesn't exist"}), 404
-    
+        return jsonify({"message": "Student doesn't exist"}), 404
 
     stmt = (
         select(
@@ -51,7 +50,7 @@ def get_student_assessment_grades(**kwargs):
             Assessment.max_grade,
             Grade.achieved_grade
         )
-        .join(Grade, Assessment.assessment_id == Grade.assessment_id)
+        .join(Grade, Assessment.assessment_id == Grade.assessment_id, isouter=True)
         .where(
             (Assessment.subject_id == subject_id) & 
             (Grade.student_id == student_id)
@@ -67,23 +66,24 @@ def get_student_assessment_grades(**kwargs):
         'assessment_id': assessment.assessment_id,
         'type': assessment.type,
         'max_grade': assessment.max_grade,
-        'achieved_grade': assessment.achieved_grade
+        'achieved_grade': assessment.achieved_grade or 0  # Ensure None is replaced with 0
     } for assessment in subject_assessments]
 
-    elements = []
+    total_grade = sum(
+        ((assessment['achieved_grade'] / 100) * assessment['max_grade']) 
+        for assessment in serialized_subject_assessments
+    )
 
-    for i in serialized_subject_assessments:
-        max_grade = i['max_grade']
-        achieved_grade = i['achieved_grade']
-        if achieved_grade:
-            element = achieved_grade/100 * max_grade
-            elements.append(element)
-        else:
-            continue
+    # Calculate the percentage of the total possible score (which should sum to 100)
+    total_max_grade = sum(assessment['max_grade'] for assessment in serialized_subject_assessments)
+    # Calculate the percentage of the total possible score
+    if total_max_grade > 0:
+        grade_percentage = (total_grade / total_max_grade) * 100
+        grade_percentage = round(grade_percentage, 1)  # Round to one decimal place
+    else:
+        grade_percentage = 0
 
-    grade_percentage = (sum(elements))
-
-    return jsonify({"grade_percentage": grade_percentage}, serialized_subject_assessments), 200
+    return jsonify({"grade_percentage": grade_percentage, "assessments": serialized_subject_assessments}), 200
 
 
 def add_new_assessment(**kwargs):
