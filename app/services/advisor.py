@@ -61,10 +61,14 @@ def add_advisee_bulk():
     file_path = os.path.join(UPLOAD_FOLDER, filename)
     file.save(file_path)
 
-    # Assuming the CSV has a 'Student ID' column
     try:
-        df = pd.read_csv(file_path)
-        student_ids = df['Student ID'].tolist()
+        # Read CSV with the correct delimiter and handling inconsistent data
+        df = pd.read_csv(file_path, delimiter=';', skip_blank_lines=True)
+        # Clean the 'Student ID' column to remove any unexpected spaces
+        df['Student ID'] = df['Student ID'].str.strip()
+        
+        # Filter out rows where 'Student ID' might be NaN or empty
+        student_ids = df['Student ID'].dropna().tolist()
 
         # Implement the logic to update advisees in the database
         return process_advisees(advisor_id, student_ids)
